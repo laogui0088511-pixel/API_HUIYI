@@ -47,10 +47,10 @@ try {
   // 兼容 xinbotapi（iOS旧包直接访问 /room/join 等无前缀路径）
   app.use('/', router);
 
-// 根路径
-app.get('/', (_req, res) => {
-  res.json({ status: 'ok', message: 'LiveKit Translate API' });
-});
+  // 根路径
+  app.get('/', (_req, res) => {
+    res.json({ status: 'ok', message: 'LiveKit Translate API' });
+  });
 
   const port = readIntEnv('PORT', 3000);
   app.listen(port, () => {

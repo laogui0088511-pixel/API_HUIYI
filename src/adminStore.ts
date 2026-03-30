@@ -247,18 +247,6 @@ export async function markPaymentOrderPaid(orderId: number, txHash: string): Pro
   }
 }
 
-export async function markPaymentOrderFailed(orderId: number): Promise<boolean> {
-  try {
-    const result = await getPool().query(
-      "UPDATE tg_payment_orders SET status = 'failed' WHERE id = $1 AND status = 'pending'",
-      [orderId],
-    );
-    return (result.rowCount ?? 0) > 0;
-  } catch {
-    return false;
-  }
-}
-
 export async function expirePendingPaymentOrders(): Promise<boolean> {
   try {
     await getPool().query(
@@ -310,19 +298,6 @@ export async function getBotCodes(botId: number, used?: boolean): Promise<UserCo
   return rows as UserCode[];
 }
 
-export async function markCodeUsed(code: string, roomName?: string): Promise<boolean> {
-  try {
-    if (roomName) {
-      await getPool().query('UPDATE tg_user_codes SET used = true, room_name = $1 WHERE code = $2', [roomName, code]);
-    } else {
-      await getPool().query('UPDATE tg_user_codes SET used = true WHERE code = $1', [code]);
-    }
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 export async function markCodeUnused(code: string): Promise<boolean> {
   try {
     await getPool().query('UPDATE tg_user_codes SET used = false, room_name = NULL WHERE code = $1', [code]);
@@ -339,13 +314,6 @@ export async function deleteUserCode(code: string): Promise<boolean> {
   } catch {
     return false;
   }
-}
-
-export async function deleteAllBotCodes(botId: number): Promise<number> {
-  const { rows } = await getPool().query('SELECT code FROM tg_user_codes WHERE bot_id = $1', [botId]);
-  if (rows.length === 0) return 0;
-  const result = await getPool().query('DELETE FROM tg_user_codes WHERE bot_id = $1', [botId]);
-  return result.rowCount ?? 0;
 }
 
 export async function getBotBindings(botId: number): Promise<BotBinding[]> {
