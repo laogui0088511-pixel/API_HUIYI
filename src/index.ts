@@ -7,7 +7,6 @@ import { LiveKitService } from './livekitService';
 import { createRouter } from './routes';
 import { initDatabase } from './database';
 import { readIntEnv, readOptionalServerConfig, requireEnv } from './env';
-import { startPaymentMonitor } from './paymentMonitor';
 
 dotenv.config();
 
@@ -62,8 +61,6 @@ try {
       console.log('备用服务器: 未配置');
     }
   });
-
-  startPaymentMonitor(lkService.getInviteService());
 
   process.on('SIGTERM', () => {
     lkService.destroy();

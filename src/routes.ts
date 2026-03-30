@@ -2,7 +2,6 @@ import { Router, Request, Response } from 'express';
 import { LiveKitService } from './livekitService';
 import { CreateInviteRequest, JoinRequest } from './models';
 import { requireEnv } from './env';
-import { registerBackofficeRoutes } from './backofficeRouter';
 import { createConsoleToken, isConsoleLoginConfigured, readBearerToken, verifyConsoleToken } from './consoleAuth';
 
 export function createRouter(lkService: LiveKitService): Router {
@@ -497,8 +496,6 @@ export function createRouter(lkService: LiveKitService): Router {
       res.status(500).json({ error: (err as Error).message });
     }
   });
-
-  registerBackofficeRoutes(router, requireAdmin, inviteService);
 
   return router;
 }
